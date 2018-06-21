@@ -3,36 +3,73 @@ import re
 from apps.user import models
 from django.core.urlresolvers import reverse
 # Create your views here.
+from django.views.generic import View
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer,SignatureExpired
+from taxable_v2 import settings
+from django.http import HttpResponse
+from django.core.mail import send_mail
 
-def Register(request):
+class RegisterView(View):
+    def get(self,request):
+        return render(request,'register.html')
+    def post(self,request):
+        username = request.POST.get('user_name')
+        password = request.POST.get('pwd')
+        email = request.POST.get('email')
+        allow = request.POST.get('allow')
+        # 进行数据校验
+        if not all([username, password, email]):
+            return render(request, 'register.html', {'errmsg': "数据不完整"})
 
-    return render(request,'register.html')
+        if not re.match(r'^[a-z0-9][\w.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
+            return render(request, 'register.html', {'errmsg': "邮箱格式不正确"})
 
+        if allow != 'on':
+            return render(request, 'register.html', {'errmsg': "请同意协议"})
+        try:
+            user = models.User.objects.get(username=username)
+        except models.User.DoesNotExist as e:
+            user = None
 
-def register_handle(reuqest):
-    #进行数据提取
-    username = reuqest.POST.get('user_name')
-    password = reuqest.POST.get('pwd')
-    email = reuqest.POST.get('email')
-    allow = reuqest.POST.get('allow')
-    #进行数据校验
-    if not all([username,password,email]):
-        return render(reuqest, 'register.html' ,{'errmsg':"数据不完整"})
+        if user:
+            return render(request, 'register.html', {'errmsg': '用户名已存在'})
 
-    if not re.match(r'^[a-z0-9][\w.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$',email):
-        return render(reuqest, 'register.html', {'errmsg': "邮箱格式不正确"})
+            # 进行业务处理
+        user = models.User.objects.create_user(username, email, password)
+        user.save()
 
-    if allow != 'on':
-        return render(reuqest, 'register.html', {'errmsg': "请同意协议"})
-    try:
-        user =models.User.objects.get(username=username)
-    except models.User.DoesNotExist as e:
-        user = None
+        # 发送激活邮件   格式：http：127.0.0.1/user/user_id
+        # 激活链接中要包含用户的身份信息，进行加密并生成token
+        # serializer = Serializer(settings.SECRET_KEY, 3600)
+        # info = {'confirm':user.id}
+        # token = serializer.dumps(info) #bytes
+        # token = token.decode()
+        #
+        # subject = '后台账户测试'
+        # message = ''
+        # sender = settings.EMAIL_FROM
+        # receiver = [email]
+        # html_message = '<h1>%s 欢迎您注册</h1></br>请点击下面的链接进行用户激活</br><a href="http:127.0.0.1/user/active/%s">http:127.0.0.1/user/active/%s</a>' % (
+        #     username, token, token)
+        # send_mail(subject, message, sender, receiver, html_message=html_message)
+        # send_mail()
+        return redirect(reverse('goods:index'))
 
-    if user:
-        return render(reuqest, 'register.html', {'errmsg': '用户名已存在'})
-    #进行业务处理
-    user = models.User.objects.create_user(username,email,password)
-    user.is_active = 0
-    user.save()
-    return redirect(reverse('goods:index'))
+# class ActiveView(View):
+#     """用户激活函数"""
+#     def get(self,request,token):
+#         #进行解密
+#         serializer = Serializer(settings.SECRET_KEY,3600)
+#         try:
+#             info = serializer.loads(token)
+#             user_id = info['confirm']
+#             user = models.User.objects.get(id = user_id)
+#             user.is_active =1
+#             user.save()
+#             return redirect(reverse('user:login'))
+#         except SignatureExpired as e:
+#             return  HttpResponse("抱歉，链接已经失效")
+
+class LoginView(View):
+    def get(self,request):
+        return  render(request,'login.html')
