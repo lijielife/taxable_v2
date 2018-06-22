@@ -9,7 +9,6 @@ class System(models.Model):
               3.存量商业用房分区域住宅价格
     """
     name = models.CharField(max_length=32,verbose_name="评估价体系")
-    country = models.ManyToManyField('Country')
 
     class Meta:
         db_table = "System"
@@ -24,6 +23,7 @@ class Country(models.Model):
     所在区县：1，东城  2.西城  3.朝阳 ......
     """
     name = models.CharField(max_length=32,verbose_name="所在区县")
+    country_system = models.ForeignKey('System',null=True,blank=True,on_delete=models.CASCADE)
     class Meta:
         db_table = "Country"
         verbose_name_plural = '所在区县'
@@ -37,7 +37,8 @@ class Area(models.Model):
     所在的区域: 1.安定门外   2.东直门外
     """
     name = models.CharField(max_length=32,verbose_name="所在区域")
-    country = models.ForeignKey("Country",on_delete=models.CASCADE)
+    area_system = models.ForeignKey('System',null=True, blank=True, on_delete=models.CASCADE)
+    area_country = models.ForeignKey('Country', null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         db_table = "Area"
@@ -52,7 +53,7 @@ class House(models.Model):
     房型：1.楼房  2.平房  3，地下室
     """
     name = models.CharField(max_length=32,verbose_name='房型')
-    #house = models.ForeignKey("System",on_delete=models.CASCADE)
+    house_system = models.ForeignKey('System',null=True, blank=True, on_delete=models.CASCADE)
     class Meta:
         db_table = 'House'
         verbose_name_plural = "房型"
