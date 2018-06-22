@@ -73,7 +73,15 @@ class RegisterView(View):
 
 class LoginView(View):
     def get(self,request):
-        return  render(request,'login.html')
+        #判断是否记住了用户名
+        if 'username' in request.COOKIES:
+            username = request.COOKIES.get('username')
+            checked = 'checked'
+        else:
+            username= ''
+            checked = ''
+        #使用模板
+        return  render(request,'login.html',{'username':username,'checked':checked})
 
     def post(self,request):
         username = request.POST.get('username')
@@ -86,7 +94,15 @@ class LoginView(View):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('goods:index'))
+                #判断是否需要记住用户名
+                response = redirect(reverse('goods:index'))
+                remember = request.POST.get('remember')
+                if remember == 'on':
+                    response.set_cookie('username',username,max_age=7*24*3600)
+                else:
+                    response.delete_cookie('username')
+                return response
+
             else:
                 return render(request, 'login.html',{'errmsg':"用户未激活"})
         else:
