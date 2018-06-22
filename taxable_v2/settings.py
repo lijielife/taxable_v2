@@ -136,3 +136,4 @@ EMAIL_FROM = '您好<msmonter@163.com>'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+LOGIN_URL = '/user/login'

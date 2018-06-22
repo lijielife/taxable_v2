@@ -95,7 +95,9 @@ class LoginView(View):
             if user.is_active:
                 login(request, user)
                 #判断是否需要记住用户名
-                response = redirect(reverse('goods:index'))
+                next_url = request.GET.get('next', reverse('goods:index'))
+                #定义挑战下一次页面地址
+                response = redirect(next_url)
                 remember = request.POST.get('remember')
                 if remember == 'on':
                     response.set_cookie('username',username,max_age=7*24*3600)
@@ -107,3 +109,13 @@ class LoginView(View):
                 return render(request, 'login.html',{'errmsg':"用户未激活"})
         else:
             return render(request, 'login.html',{'errmsg':"用户名或密码错误"})
+
+
+class UserInfoView(View):
+    def get(self, request):
+        #在做用户登陆验证得时候，使用django内置得request.is_authenticated方法
+        return render(request,'user_center_info.html')
+    def post(self,request):
+        pass
+
+
