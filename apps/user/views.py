@@ -8,7 +8,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer,Signature
 from taxable_v2 import settings
 from django.http import HttpResponse
 from django.core.mail import send_mail
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 
 class RegisterView(View):
     def get(self,request):
@@ -110,6 +110,15 @@ class LoginView(View):
         else:
             return render(request, 'login.html',{'errmsg':"用户名或密码错误"})
 
+class LogoutView(View):
+    '''退出登录'''
+    def get(self, request):
+        '''退出登录'''
+        # 清除用户的session信息
+        logout(request)
+
+        # 跳转到首页
+        return redirect(reverse('goods:index'))
 
 class UserInfoView(View):
     def get(self, request):
