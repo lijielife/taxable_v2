@@ -120,19 +120,19 @@ USE_L10N = True
 
 USE_TZ = True
 
-#发送邮件配置
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# smtp服务器的地址 ，
-EMAIL_HOST = 'smtp.163.com'
-EMAIL_PORT = 25
-#发送邮件的邮箱
-EMAIL_HOST_USER = 'msmonter@163.com'
-#在邮箱中设置的客户端授权密码
-EMAIL_HOST_PASSWORD = 'chen4868 '
-#收件人看到的发件人
-EMAIL_FROM = '您好<msmonter@163.com>'
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
+# #发送邮件配置
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# # smtp服务器的地址 ，
+# EMAIL_HOST = 'smtp.163.com'
+# EMAIL_PORT = 25
+# #发送邮件的邮箱
+# EMAIL_HOST_USER = 'msmonter@163.com'
+# #在邮箱中设置的客户端授权密码
+# EMAIL_HOST_PASSWORD = 'chen4868 '
+# #收件人看到的发件人
+# EMAIL_FROM = '您好<msmonter@163.com>'
+# # Static files (CSS, JavaScript, Images)
+# # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]

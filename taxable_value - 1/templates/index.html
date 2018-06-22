@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>存量房分区域计税交易工具</title>
+</head>
+    <style>
+        .condition a{
+            display:inline-block;
+            padding: 5px 8px;
+            border: 1px solid #dddddd;
+        }
+        .condition a.active{
+            background: coral;
+            color: white;
+        }
+    </style>
+<body>
+
+    <div class="condition">
+        <div>
+            <h1>筛选</h1>
+        </div>
+        <div>
+            {% if kwargs.area_id == 0 %}
+                <a class="active" href="/index-0-{{ kwargs.house_id }}.html">全部</a>
+            {% else %}
+                <a href="/index-0-{{ kwargs.house_id }}.html">全部</a>
+            {% endif %}
+            {% for row in area_list %}
+                {% if row.id == kwargs.area_id %}
+                    <a class="active" href="/index-{{ row.id }}-{{ kwargs.house_id }}.html">{{ row.name }}</a>
+                {% else %}
+                    <a href="/index-{{ row.id }}-{{ kwargs.house_id }}.html">{{ row.name }}</a>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <div>
+            {% if kwargs.house_id == 0 %}
+                <a class="active" href="/index-{{ kwargs.area_id }}-0.html">全部</a>
+            {% else %}
+                <a href="/index-{{ kwargs.area_id }}-0.html">全部</a>
+            {% endif %}
+            {% for row in house_list %}
+                 {% if row.id == kwargs.house_id %}
+                    <a class="active" href="/index-{{ kwargs.area_id }}-{{ row.id }}.html">{{ row.name }}</a>
+                {% else %}
+                    <a href="/index-{{ kwargs.area_id }}-{{ row.id }}.html">{{ row.name }}</a>
+                {% endif %}
+            {% endfor %}
+
+
+        </div>
+
+
+        <div>
+            <h1>结果</h1>
+        </div>
+
+
+        <div>
+            {% for row in plot_list %}
+                <a>{{ row.title }}</a>
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+
+
+    <script src="/static/js/jquery-3.1.1.js"></script>
+</body>
+</html>

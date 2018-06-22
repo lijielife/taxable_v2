@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>存量房分区域计税交易工具</title>
+</head>
+    <style>
+
+        .condition a{
+            display:inline-block;
+            padding: 5px 8px;
+            border: 1px solid #dddddd;
+        }
+        .condition a.active{
+            background: coral;
+            color: white;
+        }
+    </style>
+<body>
+
+    <div class="condition">
+        <div>
+            <h1 align="center" ><strong><font color="red">自2014年03月20日执行本版本"最低计税价格体系"的计税价格标准，请认真核对软件的适用范围</font></strong></h1>
+        </div>
+
+
+        <div>
+            {% if  kwargs.system_id == 0  %}
+                 <a class="active" href="{% url "index_many" system_id=0 country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}">全部</a>
+             {% else %}
+                <a href="{% url "index_many" system_id=0 country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}">全部</a>
+            {% endif %}
+
+            {% for item in system_list %}
+                {% if item.id == kwargs.system_id %}
+                     <a href="{% url "index_many" system_id=item.id country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}" class="active">{{ item.name }}</a>
+                {% else %}
+                    <a href="{% url "index_many" system_id=item.id country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}">{{ item.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+         <div>
+              {% if  kwargs.country_id == 0  %}
+                 <a class="active" href="{% url "index_many" system_id=kwargs.system_id country_id=0 area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}">全部</a>
+             {% else %}
+                <a href="{% url "index_many" system_id=kwargs.system_id country_id=0 area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}">全部</a>
+            {% endif %}
+
+            {% for item in class_country_list %}
+                {% if item.id == kwargs.country_id %}
+                    <a href="{% url "index_many" system_id=kwargs.system_id country_id=item.id area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}" class="active">{{ item.name }}</a>
+                {% else %}
+
+                    <a href="{% url "index_many" system_id=kwargs.system_id country_id=item.id area_id=kwargs.area_id house_id=kwargs.house_id time_id=kwargs.time_id %}">{{ item.name }}</a>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <div>
+            {% if  kwargs.area_id == 0  %}
+                 <a class="active" href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=0 house_id=kwargs.house_id time_id=kwargs.time_id %}">全部</a>
+             {% else %}
+                <a href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=0 house_id=kwargs.house_id time_id=kwargs.time_id %}">全部</a>
+            {% endif %}
+
+            {% for item in class_area_list %}
+                {% if item.id == kwargs.area_id %}
+                     <a href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=item.id house_id=kwargs.house_id time_id=kwargs.time_id %}" class="active">{{ item.name }}</a>
+                {% else %}
+                    <a href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=item.id house_id=kwargs.house_id time_id=kwargs.time_id%}">{{ item.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div>
+            {% if kwargs.house_id == 0 %}
+                <a class="active" href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=0 time_id=kwargs.time_id %}">全部</a>
+            {% else %}
+                <a  href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=0 time_id=kwargs.time_id %} ">全部</a>
+            {% endif %}
+
+            {% for item in house_list %}
+                {% if item.id == kwargs.house_id %}
+                    <a class="active" href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=item.id time_id=kwargs.time_id%}">{{ item.name }}</a>
+                {% else %}
+                     <a href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=item.id time_id=kwargs.time_id %}">{{ item.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div>
+            {% if kwargs.time_id == 0 %}
+                <a class="active" href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.area_id time_id=0 %}">全部</a>
+            {% else %}
+                <a href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.house_id time_id=0 %}">全部</a>
+            {% endif %}
+
+            {% for item in time_list %}
+                {% if item.id == kwargs.time_id %}
+                    <a class="active" href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.house_id time_id=item.id %}">{{ item.time }}</a>
+                {% else %}
+                     <a href="{% url "index_many" system_id=kwargs.system_id country_id=kwargs.country_id area_id=kwargs.area_id house_id=kwargs.house_id time_id=item.id %}">{{ item.time }}</a>
+
+                {% endif %}
+            {% endfor %}
+        </div>
+{##}
+{#        <div>#}
+{#            {% for item in area_list %}#}
+{#                <a>{{ item.name}}</a>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{##}
+{##}
+{#        <div>#}
+{#            {% for item in house_list %}#}
+{#                <a>{{ item.name }}</a>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{##}
+{#        <div>#}
+            <h1>结果</h1>
+            <div>
+                {% for item in plot_list %}
+                    <a>{{ item.title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+
+    <script src="/static/js/jquery-3.1.1.js"></script>
+</body>
+</html>

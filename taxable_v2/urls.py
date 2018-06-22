@@ -21,3 +21,4 @@ urlpatterns = [
     url(r'^user/',include('apps.user.urls',namespace='user')),
     url(r'^',include('apps.goods.urls',namespace='goods')),
 ]
+
