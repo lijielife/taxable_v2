@@ -8,6 +8,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer,Signature
 from taxable_v2 import settings
 from django.http import HttpResponse
 from django.core.mail import send_mail
+from django.contrib.auth import authenticate,login
 
 class RegisterView(View):
     def get(self,request):
@@ -73,3 +74,20 @@ class RegisterView(View):
 class LoginView(View):
     def get(self,request):
         return  render(request,'login.html')
+
+    def post(self,request):
+        username = request.POST.get('username')
+        password = request.POST.get('pwd')
+
+        if not all([username,password]):
+            return render(request,'login.html',{"errmsg":"数据不完整 "})
+
+        user = authenticate(username=username,password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect(reverse('goods:index'))
+            else:
+                return render(request, 'login.html',{'errmsg':"用户未激活"})
+        else:
+            return render(request, 'login.html',{'errmsg':"用户名或密码错误"})
